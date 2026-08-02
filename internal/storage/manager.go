@@ -24,6 +24,11 @@ func (m *Manager) AddDisk(path string) error {
 
 	if err != nil {
 
+		// treat only errors that represent missing .json file
+		if !os.IsNotExist(err) {
+			return err
+		}
+
 		pebbleDir := filepath.Join(path, ".pebble")
 		chunkDir := filepath.Join(pebbleDir, "chunks")
 
@@ -51,24 +56,27 @@ func (m *Manager) AddDisk(path string) error {
 		TotalSpace: total,
 		FreeSpace:  free,
 	}
-
+	//make sure that overwriting the map entry doesnt succeed
+	if _, exists := m.disks[meta.ID]; exists {
+    return fmt.Errorf("disk %s already added", meta.ID)
+}
 	m.disks[disk.ID] = disk
 
-	fmt.Println("Added disk:", disk.ID)
+	fmt.Printf("Added disk %s at %s\n", disk.ID, path)
 
 	return nil
 }
 
 // why this? store the id of each mount on the disk itself, eaach disk gets disk.json where meta of the disk is stored
 // this json file will be the first thinkg pebbleFs reads and knows info abt disk
-func createDiskMetadata() (*DiskMetadata, error) {
+func createDiskMetadata() *DiskMetadata {
 
-	meta := &DiskMetadata{
+	return &DiskMetadata{
 		ID:      uuid.New().String(),
 		Version: 1,
 	}
 
-	return meta, nil
+
 }
 
 func saveMetadata(path string, meta *DiskMetadata) error {
