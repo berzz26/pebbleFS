@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -38,7 +39,7 @@ func (m *Manager) AddDisk(path string) error {
 			return err
 		}
 
-		meta = createDiskMetadata()
+		meta = createDiskMetadata(path)
 
 		if err := saveMetadata(path, meta); err != nil {
 			return err
@@ -71,11 +72,14 @@ func (m *Manager) AddDisk(path string) error {
 
 // why this? store the id of each mount on the disk itself, eaach disk gets disk.json where meta of the disk is stored
 // this json file will be the first thinkg pebbleFs reads and knows info abt disk
-func createDiskMetadata() *DiskMetadata {
+func createDiskMetadata(path string) *DiskMetadata {
 
 	return &DiskMetadata{
-		ID:      uuid.New().String(),
-		Version: 1,
+		ID:         uuid.New().String(),
+		Version:    1,
+		CreatedAt:  time.Now(),
+		Filesystem: detectFilesystem(path),
+		Label:      filepath.Base(path),
 	}
 
 }

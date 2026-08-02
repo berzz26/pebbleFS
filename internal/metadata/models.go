@@ -74,6 +74,15 @@ CREATE TABLE IF NOT EXISTS file_chunks(
     FOREIGN KEY(file_id) REFERENCES files(id),
     FOREIGN KEY(chunk_id) REFERENCES chunks(id)
 );
+
+CREATE TABLE IF NOT EXISTS disks(
+
+    id TEXT PRIMARY KEY,
+    mount_path TEXT NOT NULL,
+    total_space INTEGER NOT NULL,
+    free_space INTEGER NOT NULL,
+    healthy INTEGER NOT NULL
+);
 `
 
 	_, err := db.conn.Exec(query)

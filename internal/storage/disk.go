@@ -7,3 +7,4 @@ type Disk struct {
 	FreeSpace  uint64
 	Healthy    bool
 }
+
