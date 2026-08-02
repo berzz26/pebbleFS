@@ -1,6 +1,21 @@
 package metadata
 
 
+func (db *DB) UpsertChunk(chunk Chunk) (bool, error) {
+
+	err := db.InsertChunk(chunk)
+	if err == nil {
+		return true, nil
+	}
+
+	err = db.IncrementReference(chunk.ID)
+	if err != nil {
+		return false, err
+	}
+
+	return false, nil
+}
+
 func (db *DB) ChunkExists(id string) (bool, error) {
 
 	var exists int

@@ -120,6 +120,12 @@ func (m *Manager) Disks() []*Disk {
 
 	return disks
 }
+
+func (m *Manager) GetDisk(id string) (*Disk, bool) {
+	disk, ok := m.disks[id]
+	return disk, ok
+}
+
 //after a write, update the available space metadata of the disk
 func (m *Manager) ReserveSpace(diskID string, bytes uint64) error {
 
