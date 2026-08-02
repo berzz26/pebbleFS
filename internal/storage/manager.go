@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"os"
 	"path/filepath"
+	"errors"
 )
 
 type Manager struct {
@@ -107,4 +108,31 @@ func loadMetadata(path string) (*DiskMetadata, error) {
 	}
 
 	return &meta, nil
+}
+
+func (m *Manager) Disks() []*Disk {
+	// returns a pool of disk from the private map.
+	disks := make([]*Disk, 0, len(m.disks))
+
+	for _, disk := range m.disks {
+		disks = append(disks, disk)
+	}
+
+	return disks
+}
+//after a write, update the available space metadata of the disk
+func (m *Manager) ReserveSpace(diskID string, bytes uint64) error {
+
+	disk, ok := m.disks[diskID]
+	if !ok {
+		return errors.New("disk not found")
+	}
+
+	if disk.FreeSpace < bytes {
+		return errors.New("not enough space")
+	}
+
+	disk.FreeSpace -= bytes
+
+	return nil
 }
