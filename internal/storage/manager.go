@@ -151,6 +151,34 @@ func (m *Manager) Count() int {
 	return len(m.disks)
 }
 
-func (m *Manager) TotalCapacity() uint64
+func (m *Manager) TotalCapacity() uint64 {
 
-func (m *Manager) TotalFreeSpace() uint64
+	var total uint64
+
+	for _, disk := range m.disks {
+		total += disk.TotalSpace
+	}
+
+	return total
+}
+func (m *Manager) TotalFreeSpace() uint64 {
+
+	var total uint64
+
+	for _, disk := range m.disks {
+		total += disk.FreeSpace
+	}
+
+	return total
+}
+func (m *Manager) RemoveDisk(id string) {
+
+	delete(m.disks, id)
+}
+
+
+//will implement this later.
+
+func detectFilesystem(path string) string {
+	return "unkown"
+}

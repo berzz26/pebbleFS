@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/berzz/pebbleFS/internal/metadata"
 	"github.com/berzz/pebbleFS/internal/placement"
 	"github.com/berzz/pebbleFS/internal/storage"
@@ -20,11 +22,21 @@ func New() (*Pebble, error) {
 	}
 
 	storageManager := storage.NewManager()
+	disks, err := db.GetDisks()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, disk := range disks {
+		if err := storageManager.AddDisk(disk.MountPath); err != nil {
+			fmt.Printf("warning: failed to load disk %s: %v\n", disk.ID, err)
+		}
+	}
 	strategy := placement.NewMostFreeStrategy(storageManager)
 
 	return &Pebble{
 		Metadata: db,
 		Storage:  storageManager,
 		Strategy: strategy,
-	},nil
+	}, nil
 }
