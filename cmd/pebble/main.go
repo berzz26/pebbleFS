@@ -35,12 +35,31 @@ func main() {
 			log.Fatal("missing file path")
 		}
 
-		if err := app.Put(os.Args[2]); err != nil {
+		if err := app.Put(os.Args[3]); err != nil {
 			log.Fatal(err)
 		}
 
 		fmt.Println("Upload completed successfully.")
+	case "get":
 
+		if len(os.Args) < 3 {
+			log.Fatal("missing filename")
+		}
+
+		destination := os.Args[2]
+
+		if len(os.Args) == 4 {
+			destination = os.Args[3]
+		}
+
+		if err := app.Get(
+			os.Args[2],
+			destination,
+		); err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println("Download completed.")
 	default:
 		log.Fatalf("unknown command: %s", os.Args[1])
 	}

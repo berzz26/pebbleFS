@@ -2,6 +2,7 @@ package metadata
 
 import (
 	"database/sql"
+
 	_ "modernc.org/sqlite"
 )
 
@@ -34,4 +35,35 @@ func New(path string) (*DB, error) {
 
 func (d *DB) Close() error {
 	return d.conn.Close()
+}
+
+func (db *DB) GetChunk(id string) (*Chunk, error) {
+
+	var chunk Chunk
+
+	err := db.conn.QueryRow(
+		`
+		SELECT
+			id,
+			disk_id,
+			path,
+			size,
+			reference_count
+		FROM chunks
+		WHERE id = ?
+		`,
+		id,
+	).Scan(
+		&chunk.ID,
+		&chunk.DiskID,
+		&chunk.Path,
+		&chunk.Size,
+		&chunk.ReferenceCount,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &chunk, nil
 }

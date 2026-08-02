@@ -2,11 +2,12 @@ package storage
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"os"
 	"path/filepath"
-	"errors"
+
+	"github.com/google/uuid"
 )
 
 type Manager struct {
@@ -59,11 +60,11 @@ func (m *Manager) AddDisk(path string) error {
 	}
 	//make sure that overwriting the map entry doesnt succeed
 	if _, exists := m.disks[meta.ID]; exists {
-    return fmt.Errorf("disk %s already added", meta.ID)
-}
+		return fmt.Errorf("disk %s already added", meta.ID)
+	}
 	m.disks[disk.ID] = disk
 
-	fmt.Printf("Added disk %s at %s\n", disk.ID, path)
+	// fmt.Printf("Added disk %s at %s\n", disk.ID, path)
 
 	return nil
 }
@@ -76,7 +77,6 @@ func createDiskMetadata() *DiskMetadata {
 		ID:      uuid.New().String(),
 		Version: 1,
 	}
-
 
 }
 
@@ -126,7 +126,7 @@ func (m *Manager) GetDisk(id string) (*Disk, bool) {
 	return disk, ok
 }
 
-//after a write, update the available space metadata of the disk
+// after a write, update the available space metadata of the disk
 func (m *Manager) ReserveSpace(diskID string, bytes uint64) error {
 
 	disk, ok := m.disks[diskID]
