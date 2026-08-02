@@ -8,7 +8,7 @@ import (
 
 // ErrCorruptedChunk is returned when a chunk's data does not match its ID hash.
 var ErrCorruptedChunk = errors.New("corrupted chunk")
-
+var ErrEmptyChunk = errors.New("empty chunk")
 func Write(root string, chunk Chunk) error {
 	//rebuild the path from the chunk hash
 	path := ChunkPath(root, chunk.ID)
@@ -22,9 +22,9 @@ func Write(root string, chunk Chunk) error {
 		// Chunk already exists.
 		return nil
 	}
-	
+
 	if len(chunk.Data) == 0 {
-		return errors.New("empty chunk")
+		return ErrEmptyChunk
 	}
 	computed := Hash(chunk.Data)
 
