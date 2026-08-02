@@ -142,3 +142,11 @@ func (m *Manager) ReserveSpace(diskID string, bytes uint64) error {
 
 	return nil
 }
+
+func (m *Manager) Count() int {
+	return len(m.disks)
+}
+
+func (m *Manager) TotalCapacity() uint64
+
+func (m *Manager) TotalFreeSpace() uint64
