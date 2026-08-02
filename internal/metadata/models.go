@@ -31,6 +31,14 @@ const (
 	UploadComplete UploadStatus = "COMPLETE"
 	UploadFailed UploadStatus = "FAILED"
 )
+type ChunkInfo struct {
+	ChunkID    string
+	ChunkIndex int
+
+	DiskID string
+	Path   string
+	Size   int64
+}
 
 type Upload struct {
 	ID        string

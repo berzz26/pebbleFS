@@ -14,6 +14,10 @@ type Pebble struct {
 	Strategy placement.Strategy
 }
 
+func (p *Pebble) ListFiles() ([]metadata.File, error) {
+	return p.Metadata.ListFiles()
+}
+
 func New() (*Pebble, error) {
 	db, err := metadata.New("data/pebble.db")
 
@@ -28,7 +32,7 @@ func New() (*Pebble, error) {
 	}
 
 	for _, disk := range disks {
-		if err := storageManager.AddDisk(disk.MountPath); err != nil {
+		if _, err := storageManager.AddDisk(disk.MountPath); err != nil {
 			fmt.Printf("warning: failed to load disk %s: %v\n", disk.ID, err)
 		}
 	}

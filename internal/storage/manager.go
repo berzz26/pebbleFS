@@ -21,7 +21,7 @@ func NewManager() *Manager {
 	}
 }
 
-func (m *Manager) AddDisk(path string) error {
+func (m *Manager) AddDisk(path string) (*Disk, error) {
 
 	meta, err := loadMetadata(path)
 
@@ -29,27 +29,27 @@ func (m *Manager) AddDisk(path string) error {
 
 		// treat only errors that represent missing .json file
 		if !os.IsNotExist(err) {
-			return err
+			return nil, err
 		}
 
 		pebbleDir := filepath.Join(path, ".pebble")
 		chunkDir := filepath.Join(pebbleDir, "chunks")
 
 		if err := os.MkdirAll(chunkDir, 0755); err != nil {
-			return err
+			return nil, err
 		}
 
 		meta = createDiskMetadata(path)
 
 		if err := saveMetadata(path, meta); err != nil {
-			return err
+			return nil, err
 		}
 
 	}
 
 	total, free, err := GetDiskStats(path)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	disk := &Disk{
@@ -61,13 +61,11 @@ func (m *Manager) AddDisk(path string) error {
 	}
 	//make sure that overwriting the map entry doesnt succeed
 	if _, exists := m.disks[meta.ID]; exists {
-		return fmt.Errorf("disk %s already added", meta.ID)
+		return nil, fmt.Errorf("disk %s already added", meta.ID)
 	}
 	m.disks[disk.ID] = disk
 
-	// fmt.Printf("Added disk %s at %s\n", disk.ID, path)
-
-	return nil
+	return disk, nil
 }
 
 // why this? store the id of each mount on the disk itself, eaach disk gets disk.json where meta of the disk is stored

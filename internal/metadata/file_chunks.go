@@ -61,3 +61,49 @@ func (db *DB) GetFileChunks(fileID int64) ([]FileChunkEntry, error) {
 
 	return chunks, nil
 }
+
+func (db *DB) GetChunkInfo(fileID int64) ([]ChunkInfo, error) {
+
+	rows, err := db.conn.Query(`
+		SELECT
+			fc.chunk_id,
+			fc.chunk_index,
+			c.disk_id,
+			c.path,
+			c.size
+		FROM file_chunks fc
+		JOIN chunks c
+			ON fc.chunk_id = c.id
+		WHERE fc.file_id = ?
+		ORDER BY fc.chunk_index
+	`, fileID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var chunks []ChunkInfo
+
+	for rows.Next() {
+
+		var c ChunkInfo
+
+		err := rows.Scan(
+			&c.ChunkID,
+			&c.ChunkIndex,
+			&c.DiskID,
+			&c.Path,
+			&c.Size,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		chunks = append(chunks, c)
+	}
+
+	return chunks, nil
+}

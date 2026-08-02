@@ -45,3 +45,38 @@ func (db *DB) GetFileByName(name string) (*File, error) {
 
 	return &file, nil
 }
+
+func (db *DB) ListFiles() ([]File, error) {
+
+	rows, err := db.conn.Query(`
+		SELECT id, filename, size, created_at
+		FROM files
+		ORDER BY created_at DESC
+	`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var files []File
+
+	for rows.Next() {
+
+		var file File
+
+		err := rows.Scan(
+			&file.ID,
+			&file.Name,
+			&file.Size,
+			&file.CreatedAt,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		files = append(files, file)
+	}
+
+	return files, nil
+}

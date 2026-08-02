@@ -13,7 +13,12 @@ var diskAddCmd = &cobra.Command{
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		if err := app.Storage.AddDisk(args[0]); err != nil {
+		disk, err := app.Storage.AddDisk(args[0])
+		if err != nil {
+			return err
+		}
+
+		if err := app.Metadata.RegisterDisk(*disk); err != nil {
 			return err
 		}
 
