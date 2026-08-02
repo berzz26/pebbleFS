@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/berzz/pebblefs/internal/service"
+	"github.com/berzz/pebbleFS/internal/service"
 	"log"
 )
 
@@ -14,7 +14,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	defer app.close()
+	defer app.Metadata.Close()
 
 	fmt.Println("PebbleFS initialized successfully")
 }
