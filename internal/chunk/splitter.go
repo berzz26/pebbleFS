@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/google/uuid"
+	
 
 	"github.com/berzz/pebbleFS/internal/config"
 )
@@ -51,7 +51,7 @@ func Split(path string) (<-chan Chunk, <-chan error) {
 			copy(data, buffer[:n])
 
 			chunkChan <- Chunk{
-				ID:    uuid.New().String(),
+				ID:    Hash(data),
 				Index: index,
 				Data:  data,
 				Size:  int64(n),

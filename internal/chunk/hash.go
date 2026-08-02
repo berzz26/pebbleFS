@@ -1,0 +1,12 @@
+package chunk
+
+import (
+	"crypto/sha256"
+	"encoding/hex"
+)
+
+func Hash(data []byte) string {
+	sum := sha256.Sum256(data)
+
+	return hex.EncodeToString(sum[:])
+}

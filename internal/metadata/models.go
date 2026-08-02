@@ -16,7 +16,7 @@ func (d *DB) initialize() error {
 		path TEXT,
 		chunk_index INTEGER,
 		size INTEGER,
-		checksum TEXT
+		
 	);
 	`
 	_,err := d.conn.Exec(query)
