@@ -2,6 +2,8 @@ package service
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/berzz/pebbleFS/internal/metadata"
 	"github.com/berzz/pebbleFS/internal/placement"
@@ -19,8 +21,15 @@ func (p *Pebble) ListFiles() ([]metadata.File, error) {
 }
 
 func New() (*Pebble, error) {
-	db, err := metadata.New("data/pebble.db")
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return nil, err
+	}
 
+	dataDir := filepath.Join(home, ".pebble")
+	dbPath := filepath.Join(dataDir, "pebble.db")
+
+	db, err := metadata.New(dbPath)
 	if err != nil {
 		return nil, err
 	}
