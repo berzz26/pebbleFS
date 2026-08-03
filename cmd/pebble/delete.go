@@ -7,7 +7,7 @@ import (
 )
 
 var deleteCmd = &cobra.Command{
-	Use:   "delete <file>",
+	Use:   "rm <file>",
 	Short: "Delete a stored file",
 	Args:  cobra.ExactArgs(1),
 
