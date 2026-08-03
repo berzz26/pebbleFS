@@ -21,7 +21,7 @@ var diskListCmd = &cobra.Command{
 			"MOUNT",
 			"FREE",
 			"TOTAL",
-			"HEALTH",
+			"HEALTHY",
 		)
 
 		fmt.Println("----------------------------------------------------------------")

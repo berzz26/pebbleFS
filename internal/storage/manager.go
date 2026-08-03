@@ -176,7 +176,21 @@ func (m *Manager) RemoveDisk(id string) {
 
 
 //will implement this later.
-
 func detectFilesystem(path string) string {
 	return "unkown"
+}
+
+func (m *Manager) ReleaseSpace(
+	diskID string,
+	bytes uint64,
+) error {
+
+	disk, ok := m.disks[diskID]
+	if !ok {
+		return errors.New("disk not found")
+	}
+
+	disk.FreeSpace += bytes
+
+	return nil
 }

@@ -74,3 +74,39 @@ func (db *DB) IncrementReference(id string) error {
 
 	return err
 }
+func (db *DB) DecrementReference(id string) (int64, error) {
+
+	_, err := db.conn.Exec(`
+		UPDATE chunks
+		SET reference_count = reference_count - 1
+		WHERE id = ?
+	`, id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	var refs int64
+
+	err = db.conn.QueryRow(`
+		SELECT reference_count
+		FROM chunks
+		WHERE id = ?
+	`, id).Scan(&refs)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return refs, nil
+}
+
+func (db *DB) DeleteChunk(id string) error {
+
+	_, err := db.conn.Exec(`
+		DELETE FROM chunks
+		WHERE id = ?
+	`, id)
+
+	return err
+}

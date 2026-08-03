@@ -107,3 +107,13 @@ func (db *DB) GetChunkInfo(fileID int64) ([]ChunkInfo, error) {
 
 	return chunks, nil
 }
+
+func (db *DB) DeleteFileChunks(fileID int64) error {
+
+	_, err := db.conn.Exec(`
+		DELETE FROM file_chunks
+		WHERE file_id = ?
+	`, fileID)
+
+	return err
+}

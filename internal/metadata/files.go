@@ -80,3 +80,12 @@ func (db *DB) ListFiles() ([]File, error) {
 
 	return files, nil
 }
+func (db *DB) DeleteFile(id int64) error {
+
+	_, err := db.conn.Exec(`
+		DELETE FROM files
+		WHERE id = ?
+	`, id)
+
+	return err
+}
