@@ -1,3 +1,19 @@
+## Install
+
+```bash
+tar -xzf pebble-v0.1.0-linux-amd64.tar.gz
+cd pebble-v0.1.0-linux-amd64
+
+chmod +x pebble
+sudo mv pebble /usr/local/bin/
+```
+
+Verify the installation:
+
+```bash
+pebble --help
+```
+
 # PebbleFS
 
 PebbleFS is an experimental distributed storage engine written in Go.
