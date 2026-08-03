@@ -6,6 +6,9 @@ Instead of relying on a single storage device, PebbleFS aggregates multiple stor
 
 Files are chunked, content-addressed using SHA-256, distributed across registered disks, and reconstructed transparently during reads.
 
+## Demo 
+https://github.com/user-attachments/assets/272175ce-d380-43ac-8f7a-b619e3a44c33
+
 > PebbleFS is currently a storage engine. A FUSE filesystem interface and distributed clustering are planned for future releases.
 
 ---
